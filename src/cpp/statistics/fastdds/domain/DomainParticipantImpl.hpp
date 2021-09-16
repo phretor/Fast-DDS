@@ -72,6 +72,15 @@ public:
             const std::string& topic_name,
             const efd::DataWriterQos& dwqos);
 
+    ReturnCode_t enable_statistics_datawriter(
+            const std::string& topic_name,
+            const eprosima::fastdds::dds::DataWriterQos& dwqos,
+            efd::DataWriter*& writer,
+            bool specific_statistics_participant = true);
+
+    ReturnCode_t enable_statistics_datawriter(
+            efd::DataWriter* writer);
+
     /**
      * @brief This operation disables a Statistics DataWriter
      * @param topic_name Name of the topic associated to the Statistics DataWriter
