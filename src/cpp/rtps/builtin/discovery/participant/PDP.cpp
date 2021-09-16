@@ -347,6 +347,14 @@ void PDP::initializeParticipantProxyData(
     participant_type << mp_RTPSParticipant->getAttributes().builtin.discovery_config.discoveryProtocol;
     auto ptype = participant_type.str();
     participant_data->m_properties.push_back(fastdds::dds::parameter_property_participant_type, ptype);
+
+    for (auto& property : mp_RTPSParticipant->getAttributes().properties.properties())
+    {
+        if (property.propagate())
+        {
+            participant_data->m_properties.push_back(property.name(), property.value());
+        }
+    }
 }
 
 bool PDP::initPDP(
