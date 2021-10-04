@@ -91,7 +91,24 @@ std::pair<std::string, std::string> EDPStaticProperty::toProperty(
 {
     std::pair<std::string, std::string> prop;
     std::stringstream ss;
-    ss << "eProsimaEDPStatic_" << type << "_" << status << "_ID_" << id;
+    ss << "EDS_";
+    if (0 == type.compare("Reader"))
+    {
+        ss << "R";
+    }
+    else
+    {
+        ss << "W";
+    }
+    if (0 == status.compare("ALIVE"))
+    {
+        ss << "A_";
+    }
+    else
+    {
+        ss << "E_";
+    }
+    ss << id;
     prop.first = ss.str();
     ss.clear();
     ss.str(std::string());
@@ -106,11 +123,33 @@ std::pair<std::string, std::string> EDPStaticProperty::toProperty(
 bool EDPStaticProperty::fromProperty(
         std::pair<std::string, std::string> prop)
 {
-    if (prop.first.substr(0, 17) == "eProsimaEDPStatic" && prop.first.substr(31, 2) == "ID")
+    if (0 == prop.first.compare(0, 4, "EDS_"))
     {
-        this->m_endpointType = prop.first.substr(18, 6);
-        this->m_status = prop.first.substr(25, 5);
-        this->m_userIdStr = prop.first.substr(34, 100);
+        if (0 == prop.first.compare(4, 1, "R"))
+        {
+            this->m_endpointType = "Reader";
+        }
+        else if (0 == prop.first.compare(4, 1, "W"))
+        {
+            this->m_endpointType = "Writer";
+        }
+        else
+        {
+            return false;
+        }
+        if (0 == prop.first.compare(5, 1, "A"))
+        {
+            this->m_status = "ALIVE";
+        }
+        else if (0 == prop.first.compare(5, 1, "E"))
+        {
+            this->m_status = "ENDED";
+        }
+        else
+        {
+            return false;
+        }
+        this->m_userIdStr = prop.first.substr(7, 100);
         std::stringstream ss;
         ss << m_userIdStr;
         ss >> m_userId;
