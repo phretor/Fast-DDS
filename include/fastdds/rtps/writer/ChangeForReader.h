@@ -62,6 +62,7 @@ public:
         , seq_num_(ch.seq_num_)
         , change_(ch.change_)
         , unsent_fragments_(ch.unsent_fragments_)
+        , delivered_(ch.delivered_)
     {
     }
 
@@ -91,6 +92,7 @@ public:
         seq_num_ = ch.seq_num_;
         change_ = ch.change_;
         unsent_fragments_ = ch.unsent_fragments_;
+        delivered_ = ch.delivered_;
         return *this;
     }
 
