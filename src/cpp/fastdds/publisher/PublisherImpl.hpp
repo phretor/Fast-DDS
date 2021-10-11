@@ -148,6 +148,11 @@ public:
 
     const DomainParticipant* get_participant() const;
 
+    DomainParticipantImpl* get_participant_impl()
+    {
+        return participant_;
+    }
+
     /* TODO
        bool delete_contained_entities();
      */
