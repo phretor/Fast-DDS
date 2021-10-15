@@ -19,20 +19,21 @@
 #ifndef _RTPS_PARTICIPANT_RTPSPARTICIPANTIMPL_H_
 #define _RTPS_PARTICIPANT_RTPSPARTICIPANTIMPL_H_
 #ifndef DOXYGEN_SHOULD_SKIP_THIS_PUBLIC
+#include <atomic>
+#include <chrono>
 #include <cstdio>
 #include <cstdlib>
 #include <list>
-#include <sys/types.h>
 #include <mutex>
-#include <atomic>
-#include <chrono>
-#include <fastrtps/utils/Semaphore.h>
+#include <sys/types.h>
 
 #if defined(_WIN32)
 #include <process.h>
 #else
 #include <unistd.h>
 #endif // if defined(_WIN32)
+
+#include <fastrtps/utils/Semaphore.h>
 
 #include <rtps/messages/RTPSMessageGroup_t.hpp>
 #include <rtps/messages/SendBuffersManager.hpp>
@@ -480,6 +481,20 @@ public:
             const LocatorList_t& MulticastLocatorList,
             const LocatorList_t& UnicastLocatorList) const;
 
+protected:
+
+    //! Whether Participant is or not enabled
+    bool enabled_()
+    {
+        return enabled_status_.load();
+    }
+
+    //! Change Participant enabled status
+    void enabled_(bool status)
+    {
+        enabled_status_.store(status);
+    }
+
 private:
 
     //! DomainId
@@ -518,7 +533,7 @@ private:
     //!Pool of send buffers
     std::unique_ptr<SendBuffersManager> send_buffers_;
     //! Whether the Participant has been enabled
-    bool enabled_;
+    std::atomic<bool> enabled_status_;
 
 #if HAVE_SECURITY
     // Security manager
